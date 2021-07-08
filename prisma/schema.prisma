@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model City {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  createdBy Int?
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  Country   Country? @relation(fields: [countryID], references: [id])
+  countryID Int?
+  name      String   @db.VarChar(255)
+
+  @@map("cities")
+}
+
+model Country {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  createdBy Int?
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String   @db.VarChar(255)
+  cities    City[]
+
+  @@map("countries")
+}
